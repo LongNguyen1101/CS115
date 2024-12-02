@@ -2,6 +2,6 @@ harouzie/
 runs/
 trans/
 __pycache__/
-web/
+# web/
 *.json
 .DS_Store
