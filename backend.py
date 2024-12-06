@@ -1,7 +1,3 @@
-# Adding module translate to current directory
-import sys
-sys.path.insert(0, '../Transformers/')
-
 # Turn off FutureWarning
 import warnings
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -10,6 +6,7 @@ from flask import Flask, request, jsonify
 from flask_cors import CORS
 from flasgger import Swagger
 from translate import translate
+from config import get_config
 
 app = Flask(__name__)
 CORS(app)
@@ -31,8 +28,13 @@ def translate_api():
         schema:
           type: object
           required:
+            - translation_from_to
             - text
           properties:
+            translation_from_to:
+              type: string
+              description: Language source
+              example: 'en-vi'
             text:
               type: string
               description: Text to be translated
@@ -46,7 +48,7 @@ def translate_api():
             Translated text:
               type: string
               description: Translated output
-              example: "Bonjour"
+              example: "Xin chào"
       400:
         description: Input text is missing
       500:
@@ -54,12 +56,23 @@ def translate_api():
     """
     try:
         data = request.get_json()
+        translation_from_to = data.get('translation_from_to', '')
         input_text = data.get('text', '')
 
         if not input_text:
             return jsonify({"error": "No input text provided"}), 400
 
-        translated_text = translate(input_text)
+        config = get_config()
+        if translation_from_to == 'vi-en':
+          config['datasource'] = 'harouzie/vi_en-translation'
+          config['lang_src'] = 'Vietnamese'
+          config['lang_tgt'] = 'English'
+        else:
+          config['datasource'] = 'harouzie/en_vi-translation'
+          config['lang_src'] = 'English'
+          config['lang_tgt'] = 'Vietnamese'
+          
+        translated_text = translate(input_text, config)
 
         return jsonify({'Translated text': translated_text})
 

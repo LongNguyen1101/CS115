@@ -7,18 +7,19 @@ from dataset import BilingualDataset
 import torch
 import sys
 
-def translate(sentence: str):
+def translate(sentence: str, config=None):
     # Define the device, tokenizers, and model
     device = torch.device("cuda" if torch.cuda.is_available() else "mps" if torch.mps.is_available() else "cpu")
     # print("Using device:", device)
-    config = get_config()
+    if config is None:
+        config = get_config()
     tokenizer_src = Tokenizer.from_file(str(Path(config['tokenizer_file'].format(config['lang_src']))))
     tokenizer_tgt = Tokenizer.from_file(str(Path(config['tokenizer_file'].format(config['lang_tgt']))))
     model = build_transformer(tokenizer_src.get_vocab_size(), tokenizer_tgt.get_vocab_size(), config["seq_len"], config['seq_len'], d_model=config['d_model']).to(device)
 
     # Load the pretrained weights
     model_filename = latest_weights_file_path(config)
-    state = torch.load(model_filename)
+    state = torch.load(model_filename, map_location=torch.device(device))
     model.load_state_dict(state['model_state_dict'])
 
     # if the sentence is a number use it as an index to the test set
