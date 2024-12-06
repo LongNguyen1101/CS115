@@ -1,3 +1,3 @@
 # CS115
 
-All the code are taken from https://github.com/hkproj/pytorch-transformer.git
+Attention_Visual.ipynb, colab_train.ipynb, config.py, dataset.py, inference.ipynb, model.py, train.py and translate.py are taken from https://github.com/hkproj/pytorch-transformer.git
