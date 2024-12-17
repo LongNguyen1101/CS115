@@ -5,3 +5,4 @@ __pycache__/
 # web/
 *.json
 .DS_Store
+vi_en-translation_weights

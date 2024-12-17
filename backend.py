@@ -64,11 +64,11 @@ def translate_api():
 
         config = get_config()
         if translation_from_to == 'vi-en':
-          config['datasource'] = 'harouzie/vi_en-translation'
+          config['datasource'] = 'vi_en-translation'
           config['lang_src'] = 'Vietnamese'
           config['lang_tgt'] = 'English'
         else:
-          config['datasource'] = 'harouzie/en_vi-translation'
+          config['datasource'] = 'harouzie/vi_en-translation'
           config['lang_src'] = 'English'
           config['lang_tgt'] = 'Vietnamese'
           
